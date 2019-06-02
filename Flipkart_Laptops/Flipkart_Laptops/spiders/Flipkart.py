@@ -7,8 +7,6 @@ import pickle
 
 
 
-
-
 class FlipkartSpider(scrapy.Spider):
     name = 'Flipkart'
     page=2
@@ -29,15 +27,17 @@ class FlipkartSpider(scrapy.Spider):
                 items['current_selling_price']=all.css('._2rQ-NK::text').extract()
                 items['ratings']=all.css('.hGSR34::text').extract()
                 FlipkartSpider.list.append(items)
-                print(FlipkartSpider.list)
+                print(items)
+                if FlipkartSpider.n == FlipkartSpider.x:
+                    print('dictionaries for all laptop data is stored in a list as follows:   and the same is pickled')
+
+                    print(FlipkartSpider.list)
 
                 FlipkartSpider.n+=1
                 pic = open('Laptop.pickle', 'wb')
-                pickle.dump(list, pic)
+                pickle.dump(FlipkartSpider.list, pic)
                 pic.close()
 
-            else:
-                break
 
 
 
@@ -47,4 +47,9 @@ class FlipkartSpider(scrapy.Spider):
             print(FlipkartSpider.page)
             FlipkartSpider.page+=1
             yield response.follow(next,callback=self.parse)
+
+
+
+
+
 
