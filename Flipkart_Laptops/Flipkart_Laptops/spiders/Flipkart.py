@@ -1,30 +1,43 @@
 # -*- coding: utf-8 -*-
 import scrapy
 
+import pickle
 
-from ..items import FlipkartLaptopsItem
+
+
+
+
+
 
 class FlipkartSpider(scrapy.Spider):
     name = 'Flipkart'
     page=2
     n=1
     x=int(input())
+    list=[]
 
     start_urls = ['https://www.flipkart.com/search?q=laptops&page=2']
 
     def parse(self, response):
-        items=FlipkartLaptopsItem()
         allt=response.css('div._1UoZlX')
 
         for all in allt:
             if FlipkartSpider.n <= FlipkartSpider.x:
                 print(FlipkartSpider.n)
+                items={'Laptop_No.:':FlipkartSpider.n}
                 items['laptop_title']=all.css('._3wU53n::text').extract()
                 items['current_selling_price']=all.css('._2rQ-NK::text').extract()
                 items['ratings']=all.css('.hGSR34::text').extract()
-                print(items)
-                FlipkartSpider.n+=1
+                FlipkartSpider.list.append(items)
+                print(FlipkartSpider.list)
 
+                FlipkartSpider.n+=1
+                pic = open('Laptop.pickle', 'wb')
+                pickle.dump(list, pic)
+                pic.close()
+
+            else:
+                break
 
 
 
